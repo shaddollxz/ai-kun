@@ -13,7 +13,7 @@ export function TalkSelect<T>({
         return (
           <div
             key={option.label}
-            className="p-2 border-b cursor-pointer border-white last:border-none"
+            className="p-2 border-b cursor-pointer border-gray-600 last:border-none"
             onClick={() => onSelect(option)}
           >
             {option.label}
