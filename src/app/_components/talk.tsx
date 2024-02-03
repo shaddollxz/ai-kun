@@ -12,6 +12,21 @@ import { TalkInput } from '@/components/talk-input'
 import type { Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
+const errorMessage = [
+  {
+    type: 'text',
+    data: '哥哥我尽力了，实在是编不出来',
+    id: uniqueId(),
+    isBot: true,
+  },
+  {
+    type: 'audio',
+    data: ['/error.mp3'],
+    id: uniqueId(),
+    isBot: true,
+  },
+] as Message[]
+
 export function Talk() {
   const voiceListPromise = useMemo(() => {
     return fetch('/api/voice').then(async (res) => {
@@ -23,6 +38,7 @@ export function Talk() {
   questions[questions.length - 1][1] = voiceList
 
   const messageContent = useRef<HTMLDivElement | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const [messages, setMessage] = useState<Message[]>([
     {
@@ -33,7 +49,7 @@ export function Talk() {
     },
   ])
 
-  const [chosedSelectIds, setChosedSelectIds] = useState<string[]>([])
+  const [chosedSelectIds, setChosedSelectIds] = useState<{ id: string; value: string }[]>([])
 
   useEffect(() => {
     messageContent.current?.scrollTo({
@@ -53,6 +69,18 @@ export function Talk() {
       setMessage((v) => [...v, ...questions[0]])
       setChosedSelectIds([])
     }
+
+    if (
+      lastNode &&
+      !lastNode.isBot &&
+      typeof lastNode.data === 'string' &&
+      /我要灵魂故事/.test(lastNode.data)
+    ) {
+      setTimeout(() => {
+        setMessage((v) => [...v, ...errorMessage])
+        setChosedSelectIds([])
+      }, 5000)
+    }
   }, [messages])
 
   useEffect(() => {
@@ -63,10 +91,11 @@ export function Talk() {
         setMessage((v) => [...v, ...nextQuestion])
       } else {
         setMessage((v) => [...v, { type: 'text', id: uniqueId(), data: '故事准备中。。。', isBot: true }])
+        setLoading(true)
         // TODO: 发送请求
         fetch('/api/story', {
           method: 'post',
-          body: JSON.stringify({ options: chosedSelectIds }),
+          body: JSON.stringify({ options: chosedSelectIds.map((item) => item.value) }),
         })
           .then(async (res) => {
             const data = await res.json()
@@ -79,24 +108,11 @@ console.log(resData,"Ddd");
 
               clearInterval(intervalId)
               setMessage((v) => [...v, resData])
+              setLoading(false)
             }, 3000)
           })
           .catch(() => {
-            setMessage((v) => [
-              ...v,
-              {
-                type: 'text',
-                data: '哥哥我尽力了，实在是编不出来',
-                id: uniqueId(),
-                isBot: true,
-              },
-              {
-                type: 'audio',
-                data: ['/error.mp3'],
-                id: uniqueId(),
-                isBot: true,
-              },
-            ])
+            setMessage((v) => [...v, ...errorMessage])
           })
       }
     }
@@ -140,7 +156,25 @@ console.log(resData,"Ddd");
                     key={uniqueId()}
                     options={message.data}
                     onSelect={(option) => {
-                      if (chosedSelectIds.includes(message.id)) return
+                      if (loading) return
+
+                      if (chosedSelectIds.filter((item) => item.id === message.id).length) {
+                        setMessage((v) => [
+                          ...v,
+                          {
+                            type: 'text',
+                            id: uniqueId(),
+                            data: '开始重新选择故事类型',
+                            isBot: true,
+                          },
+                        ])
+
+                        setChosedSelectIds([])
+
+                        setMessage((v) => [...v, ...questions[0]])
+
+                        return
+                      }
 
                       setMessage((v) => [
                         ...v,
@@ -151,7 +185,7 @@ console.log(resData,"Ddd");
                           isBot: false,
                         },
                       ])
-                      setChosedSelectIds((v) => [...v, option.value])
+                      setChosedSelectIds((v) => [...v, { id: message.id, value: option.value }])
                     }}
                   />
                 )
@@ -171,6 +205,8 @@ console.log(resData,"Ddd");
       <div className="flex-shrink-0 h-[70px] py-4">
         <TalkInput
           onValueChange={(value) => {
+            if (loading) return setLoading(false)
+
             setMessage((v) => [
               ...v,
               {
