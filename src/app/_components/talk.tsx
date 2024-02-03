@@ -31,15 +31,6 @@ export function Talk() {
       data: 'Hi~我是你的专属智能助理小鸡哥，你可以对我说我要听故事~',
       isBot: true,
     },
-    {
-      type: 'audio',
-      id: uniqueId(),
-      data: [
-        'https://voc-public-storage.reecho.cn/generate/d45bc1b3-233d-476d-95d1-3a4fefef6fe5/d45bc1b3-233d-476d-95d1-3a4fefef6fe5-1-5csjhq.mp3',
-        'https://voc-public-storage.reecho.cn/generate/d45bc1b3-233d-476d-95d1-3a4fefef6fe5/d45bc1b3-233d-476d-95d1-3a4fefef6fe5-0-p64vf7.mp3',
-      ],
-      isBot: true,
-    },
   ])
 
   const [chosedSelectIds, setChosedSelectIds] = useState<string[]>([])
@@ -79,7 +70,6 @@ export function Talk() {
         })
           .then(async (res) => {
             const data = await res.json()
-
             const intervalId = setInterval(async () => {
               const res = await fetch(`/api/story?id=${data.id}`)
               const resData = await res.json()
