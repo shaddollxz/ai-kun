@@ -23,10 +23,6 @@ export type SelectMessage = {
   isBot: boolean
 }
 
-export type reqType = [
-  storyModel: 0|1,
-  storyType: string,
-  storyVoice: string,
-]
+export type reqType = [storyModel: 0 | 1, storyType: string, storyVoice: string]
 
 export type Message = TextMessage | AudioMessage | SelectMessage

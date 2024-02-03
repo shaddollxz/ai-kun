@@ -4,40 +4,49 @@ import { PauseCircle, PlayCircle, Volume, Volume1, Volume2, VolumeX } from 'luci
 import clsx from 'clsx'
 
 export function TalkAudio({
-  src,
+  urls,
   className,
   ...bubbleProps
-}: { src: string } & Omit<Parameters<typeof TalkBubble>[0], 'children'>) {
-  const [audioEle, setAudioEle] = useState<HTMLAudioElement | null>(null)
+}: { urls: string[] } & Omit<Parameters<typeof TalkBubble>[0], 'children'>) {
+  const audioEle = useRef<HTMLAudioElement | null>(null)
   const [playing, setPlaying] = useState(false)
+  const currentAudioIndex = useRef(0)
 
-  function setAudioEleRef(el: HTMLAudioElement | null) {
-    if (el) {
-      el.addEventListener('loadeddata', () => {
-        setAudioEle(el)
-      })
+  useEffect(() => {
+    const ele = (audioEle.current = document.createElement('audio'))
+    audioEle.current.src = urls[currentAudioIndex.current]
 
-      el.addEventListener('ended', () => {
-        // 播放完成设置为开始
+    document.body.appendChild(audioEle.current)
+
+    ele.addEventListener('ended', () => {
+      if (urls[++currentAudioIndex.current]) {
+        ele.src = urls[currentAudioIndex.current]
+        ele.play()
+      } else {
         setPlaying(false)
-        el.currentTime = 0
-      })
+        ele.pause()
+        currentAudioIndex.current = 0
+        ele.src = urls[currentAudioIndex.current]
+      }
+    })
+
+    return () => {
+      document.body.removeChild(ele)
     }
-  }
+  }, [])
 
   const playAudio = useCallback(() => {
     if (playing) {
       setPlaying(false)
-      audioEle?.pause()
+      audioEle.current?.pause()
     } else {
       setPlaying(true)
-      audioEle?.play()
+      audioEle.current?.play()
     }
   }, [playing, audioEle])
 
   return (
     <TalkBubble {...bubbleProps} className={clsx('cursor-pointer', className)}>
-      <audio ref={setAudioEleRef} src={src} className="opacity-0" />
       <div className="flex justify-between w-[199px]" onClick={playAudio}>
         {playing ? <PlayingAudio /> : <VolumeX />}
         {playing ? <PauseCircle className="text-orange-400" /> : <PlayCircle className="text-orange-400" />}

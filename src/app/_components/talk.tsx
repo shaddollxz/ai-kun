@@ -9,7 +9,7 @@ import { TalkSelect } from '@/components/talk-select'
 import { uniqueId } from '@/utils/unique-id'
 import { questions } from './questions'
 import { TalkInput } from '@/components/talk-input'
-import type { AudioMessage, Message } from '@/types/message'
+import type { Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
@@ -69,9 +69,16 @@ export function Talk() {
           body: JSON.stringify({ options: chosedSelectIds }),
         })
           .then(async (res) => {
-            const data = (await res.json()) as AudioMessage
+            const data = await res.json()
+            const intervalId = setInterval(async () => {
+              const res = await fetch(`/api/story?id=${data.id}`)
+              const resData = await res.json()
 
-            setMessage((v) => [...v, data])
+              if (resData.status === 'pending') return
+
+              clearInterval(intervalId)
+              setMessage((v) => [...v, resData])
+            }, 3000)
           })
           .catch(() => {
             setMessage((v) => [
@@ -84,7 +91,7 @@ export function Talk() {
               },
               {
                 type: 'audio',
-                data: '/error.mp3',
+                data: ['/error.mp3'],
                 id: uniqueId(),
                 isBot: true,
               },
@@ -152,7 +159,7 @@ export function Talk() {
                 return (
                   <div key={uniqueId()} className="flex gap-2">
                     <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
-                    <TalkAudio src={message.data} facing="left" className="rounded-tl-lg bg-gray-700" />
+                    <TalkAudio urls={message.data} facing="left" className="rounded-tl-lg bg-gray-700" />
                   </div>
                 )
             }
