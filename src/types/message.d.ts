@@ -12,7 +12,7 @@ export type TextMessage = {
 export type AudioMessage = {
   type: 'audio'
   id: string
-  data: string
+  data: string[]
   isBot: boolean
 }
 
