@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
-import { Talk } from './_components/talk'
 import Image from 'next/image'
+import { NoSSR } from '@/components/no-ssr'
+import { Talk } from './_components/talk'
 
 export default function Home() {
   return (
@@ -16,7 +17,9 @@ export default function Home() {
         <h1 className="text-2xl font-medium">听故事</h1>
       </header>
       <main className="flex-1 w-full p-2 bg-gray-900 overflow-hidden">
-        <Talk />
+        <NoSSR>
+          <Talk />
+        </NoSSR>
       </main>
     </Suspense>
   )
