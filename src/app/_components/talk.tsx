@@ -9,7 +9,7 @@ import { TalkSelect } from '@/components/talk-select'
 import { uniqueId } from '@/utils/unique-id'
 import { questions } from './questions'
 import { TalkInput } from '@/components/talk-input'
-import type { Message } from '@/types/message'
+import type { AudioMessage, Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
@@ -66,6 +66,14 @@ export function Talk() {
       } else {
         setMessage((v) => [...v, { type: 'text', id: uniqueId(), data: '故事准备中。。。', isBot: true }])
         // TODO: 发送请求
+        fetch('/api/story', {
+          method: 'post',
+          body: JSON.stringify({ options: chosedSelectIds }),
+        }).then(async (res) => {
+          const data = (await res.json()) as AudioMessage
+
+          setMessage((v) => [...v, data])
+        })
       }
     }
   }, [chosedSelectIds])
@@ -119,7 +127,7 @@ export function Talk() {
                           isBot: false,
                         },
                       ])
-                      setChosedSelectIds((v) => [...v, message.id])
+                      setChosedSelectIds((v) => [...v, option.value])
                     }}
                   />
                 )
@@ -127,15 +135,7 @@ export function Talk() {
               case 'audio':
                 return (
                   <div key={message.id} className="flex gap-2">
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      className="dark:invert"
-                      width={100}
-                      height={24}
-                      priority
-                    />
-
+                    <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
                     <TalkAudio src={message.data} facing="left" className="w-48 rounded-tl-lg bg-gray-600" />
                   </div>
                 )
