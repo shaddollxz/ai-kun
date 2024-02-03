@@ -35,7 +35,13 @@ export function Talk() {
 
   useEffect(() => {
     const lastNode = messages.at(-1)
-    if (lastNode && !lastNode.isBot && lastNode.data === '我要听故事' && !chosedSelectIds.length) {
+    if (
+      lastNode &&
+      !lastNode.isBot &&
+      typeof lastNode.data === 'string' &&
+      /我要听故事/.test(lastNode.data) &&
+      !chosedSelectIds.length
+    ) {
       setMessage((v) => [...v, ...questions[0]])
     }
   }, [messages])
