@@ -71,11 +71,29 @@ export function Talk() {
         fetch('/api/story', {
           method: 'post',
           body: JSON.stringify({ options: chosedSelectIds }),
-        }).then(async (res) => {
-          const data = (await res.json()) as AudioMessage
-
-          setMessage((v) => [...v, data])
         })
+          .then(async (res) => {
+            const data = (await res.json()) as AudioMessage
+
+            setMessage((v) => [...v, data])
+          })
+          .catch(() => {
+            setMessage((v) => [
+              ...v,
+              {
+                type: 'text',
+                data: '哥哥我尽力了，实在是编不出来',
+                id: uniqueId(),
+                isBot: true,
+              },
+              {
+                type: 'audio',
+                data: '/error.mp3',
+                id: uniqueId(),
+                isBot: true,
+              },
+            ])
+          })
       }
     }
   }, [chosedSelectIds])

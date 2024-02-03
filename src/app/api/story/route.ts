@@ -21,18 +21,24 @@ export async function POST(request: Request) {
     }),
   }
 
-  const voiceRes = await fetch('https://v1.reecho.cn/api/tts/simple-generate', options)
-    .then((response) => response.json())
-    .catch((err) => console.error(err))
+  try {
+    const voiceRes = await fetch('https://v1.reecho.cn/api/tts/simple-generate', options).then((response) =>
+      response.json()
+    )
 
-  const audio = voiceRes.data.audio
+    const audio = voiceRes.data.audio
 
-  const res: AudioMessage = {
-    type: 'audio',
-    id: crypto.randomUUID(),
-    data: audio,
-    isBot: true,
+    const res: AudioMessage = {
+      type: 'audio',
+      id: crypto.randomUUID(),
+      data: audio,
+      isBot: true,
+    }
+
+    return Response.json(res)
+  } catch (err) {
+    throw Response.json({
+      message: (err as any).message,
+    })
   }
-
-  return Response.json(res)
 }
