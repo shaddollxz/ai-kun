@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { use, useEffect, useMemo, useRef, useState } from 'react'
 
 import { IKunBadge } from '@/components/ikun-badge'
 import { TalkBubble } from '@/components/talk-bubble'
@@ -9,10 +9,21 @@ import { TalkSelect } from '@/components/talk-select'
 import { uniqueId } from '@/utils/unique-id'
 import { questions } from './questions'
 import { TalkInput } from '@/components/talk-input'
-import type { Message } from '@/types/message'
+import type { AudioMessage, Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
+  const voiceListPromise = useMemo(
+    () =>
+      fetch(`/api/voice`).then(async (res) => {
+        return await res.json()
+      }),
+    []
+  )
+  const voiceList = use(voiceListPromise)
+
+  questions[questions.length - 1][1] = voiceList
+
   const messageContent = useRef<HTMLDivElement | null>(null)
 
   const [messages, setMessage] = useState<Message[]>([
@@ -55,6 +66,14 @@ export function Talk() {
       } else {
         setMessage((v) => [...v, { type: 'text', id: uniqueId(), data: '故事准备中。。。', isBot: true }])
         // TODO: 发送请求
+        fetch('/api/story', {
+          method: 'post',
+          body: JSON.stringify({ options: chosedSelectIds }),
+        }).then(async (res) => {
+          const data = (await res.json()) as AudioMessage
+
+          setMessage((v) => [...v, data])
+        })
       }
     }
   }, [chosedSelectIds])
@@ -85,7 +104,7 @@ export function Talk() {
                   <TalkBubble
                     key={message.id}
                     facing="right"
-                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-800"
+                    className="ml-auto max-w-full rounded-tr-lg bg-orange-400 text-gray-800"
                   >
                     {message.data}
                   </TalkBubble>
@@ -108,7 +127,7 @@ export function Talk() {
                           isBot: false,
                         },
                       ])
-                      setChosedSelectIds((v) => [...v, message.id])
+                      setChosedSelectIds((v) => [...v, option.value])
                     }}
                   />
                 )
@@ -116,16 +135,8 @@ export function Talk() {
               case 'audio':
                 return (
                   <div key={message.id} className="flex gap-2">
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      className="dark:invert"
-                      width={100}
-                      height={24}
-                      priority
-                    />
-
-                    <TalkAudio src={message.data} facing="left" className="w-48 rounded-tl-lg bg-gray-600" />
+                    <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
+                    <TalkAudio src={message.data} facing="left" className="rounded-tl-lg bg-gray-600" />
                   </div>
                 )
             }

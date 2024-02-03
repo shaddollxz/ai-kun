@@ -36,7 +36,7 @@ export function TalkAudio({
   return (
     <TalkBubble {...bubbleProps} className={clsx('cursor-pointer', className)}>
       <audio ref={setAudioEleRef} src={src} className="opacity-0" />
-      <div className="flex justify-between" onClick={playAudio}>
+      <div className="flex justify-between w-[199px]" onClick={playAudio}>
         {playing ? <PlayingAudio /> : <VolumeX />}
         {playing ? <PauseCircle className="text-orange-400" /> : <PlayCircle className="text-orange-400" />}
       </div>

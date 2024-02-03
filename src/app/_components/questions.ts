@@ -10,11 +10,11 @@ export const questions: [TextMessage, SelectMessage][] = [
       data: [
         {
           label: '故事库',
-          value: '故事库',
+          value: '0',
         },
         {
           label: '使用 GPT 生成',
-          value: '使用 GPT 生成',
+          value: '1',
         },
       ],
       isBot: true,
