@@ -61,7 +61,7 @@ export function Talk() {
             <span className="text-orange-400 mr-1">小鸡哥</span>
             <span>智能助理</span>
           </IKunBadge>
-          <p className="text-center text-sm text-gray-500">助理小鸡哥 进入会话为你服务</p>
+          <p className="text-center text-xs text-gray-500">助理小鸡哥 进入会话为你服务</p>
         </div>
 
         <div className="flex flex-col gap-3 w-full">
@@ -70,15 +70,8 @@ export function Talk() {
               case 'text':
                 return message.isBot ? (
                   <div key={message.id} className="flex gap-2">
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      className="dark:invert"
-                      width={100}
-                      height={24}
-                      priority
-                    />
-                    <TalkBubble facing="left" className="rounded-tl-lg bg-gray-600">
+                    <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
+                    <TalkBubble facing="left" className="rounded-tl-lg bg-gray-700">
                       {message.data}
                     </TalkBubble>
                   </div>
@@ -86,7 +79,7 @@ export function Talk() {
                   <TalkBubble
                     key={message.id}
                     facing="right"
-                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-700"
+                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-800"
                   >
                     {message.data}
                   </TalkBubble>

@@ -15,10 +15,10 @@ export function TalkInput({
   const [inputValue, setInputValue] = useState('')
 
   return (
-    <div className={clsx('flex py-2 px-4 bg-gray-600 rounded-full', className)}>
+    <div className={clsx('flex py-2 px-4 bg-gray-700 rounded-full', className)}>
       <input
         value={inputValue}
-        className="flex-1 bg-gray-600 focus-visible:outline-none"
+        className="flex-1 bg-gray-700 focus-visible:outline-none"
         placeholder={placeholder}
         onChange={(e) => setInputValue(e.target.value)}
       />
@@ -31,7 +31,7 @@ export function TalkInput({
           }
         }}
       >
-        <SendHorizonal size={21} />
+        <SendHorizonal size={21} className="text-white" />
       </div>
     </div>
   )

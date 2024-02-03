@@ -38,7 +38,7 @@ export function TalkAudio({
       <audio ref={setAudioEleRef} src={src} className="opacity-0" />
       <div className="flex justify-between" onClick={playAudio}>
         {playing ? <PlayingAudio /> : <VolumeX />}
-        {playing ? <PauseCircle className="text-orange-500" /> : <PlayCircle className="text-orange-500" />}
+        {playing ? <PauseCircle className="text-orange-400" /> : <PlayCircle className="text-orange-400" />}
       </div>
     </TalkBubble>
   )
