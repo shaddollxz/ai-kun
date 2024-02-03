@@ -14,13 +14,9 @@ import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
   const voiceListPromise = useMemo(() => {
-    if (typeof window !== 'undefined') {
-      return fetch('/api/voice').then(async (res) => {
-        return await res.json()
-      })
-    }
-
-    return Promise.resolve({})
+    return fetch('/api/voice').then(async (res) => {
+      return await res.json()
+    })
   }, [])
   const voiceList = use(voiceListPromise)
 
