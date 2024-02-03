@@ -104,7 +104,7 @@ export function Talk() {
                   <TalkBubble
                     key={message.id}
                     facing="right"
-                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-800"
+                    className="ml-auto max-w-full rounded-tr-lg bg-orange-400 text-gray-800"
                   >
                     {message.data}
                   </TalkBubble>
@@ -136,7 +136,7 @@ export function Talk() {
                 return (
                   <div key={message.id} className="flex gap-2">
                     <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
-                    <TalkAudio src={message.data} facing="left" className="w-48 rounded-tl-lg bg-gray-600" />
+                    <TalkAudio src={message.data} facing="left" className="rounded-tl-lg bg-gray-600" />
                   </div>
                 )
             }
