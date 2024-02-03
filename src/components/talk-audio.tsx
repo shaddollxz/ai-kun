@@ -13,7 +13,9 @@ export function TalkAudio({
 
   function setAudioEleRef(el: HTMLAudioElement | null) {
     if (el) {
-      setAudioEle(el)
+      el.addEventListener('loadeddata', () => {
+        setAudioEle(el)
+      })
 
       el.addEventListener('ended', () => {
         // 播放完成设置为开始
@@ -31,7 +33,7 @@ export function TalkAudio({
       setPlaying(true)
       audioEle?.play()
     }
-  }, [playing])
+  }, [playing, audioEle])
 
   return (
     <TalkBubble {...bubbleProps} className={clsx('cursor-pointer', className)}>
