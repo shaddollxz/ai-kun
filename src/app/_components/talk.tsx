@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { use, useEffect, useMemo, useRef, useState } from 'react'
 
 import { IKunBadge } from '@/components/ikun-badge'
 import { TalkBubble } from '@/components/talk-bubble'
@@ -13,6 +13,17 @@ import type { Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
+  const voiceListPromise = useMemo(
+    () =>
+      fetch(`/api/voice`).then(async (res) => {
+        return await res.json()
+      }),
+    []
+  )
+  const voiceList = use(voiceListPromise)
+
+  questions[questions.length - 1][1] = voiceList
+
   const messageContent = useRef<HTMLDivElement | null>(null)
 
   const [messages, setMessage] = useState<Message[]>([
