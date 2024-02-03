@@ -1,4 +1,5 @@
 import type { SelectOption } from '@/types/message'
+import { uniqueId } from '@/utils/unique-id'
 
 export function TalkSelect<T>({
   options,
@@ -12,7 +13,7 @@ export function TalkSelect<T>({
       {options.map((option) => {
         return (
           <div
-            key={option.label}
+            key={`${option.label}+${uniqueId()}`}
             className="p-2 border-b cursor-pointer border-gray-600 last:border-none"
             onClick={() => onSelect(option)}
           >

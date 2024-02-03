@@ -13,13 +13,15 @@ import type { AudioMessage, Message } from '@/types/message'
 import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
-  const voiceListPromise = useMemo(
-    () =>
-      fetch(`/api/voice`).then(async (res) => {
+  const voiceListPromise = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return fetch('/api/voice').then(async (res) => {
         return await res.json()
-      }),
-    []
-  )
+      })
+    }
+
+    return Promise.resolve({})
+  }, [])
   const voiceList = use(voiceListPromise)
 
   questions[questions.length - 1][1] = voiceList
@@ -50,10 +52,10 @@ export function Talk() {
       lastNode &&
       !lastNode.isBot &&
       typeof lastNode.data === 'string' &&
-      /我要听故事/.test(lastNode.data) &&
-      !chosedSelectIds.length
+      /我要听故事/.test(lastNode.data)
     ) {
       setMessage((v) => [...v, ...questions[0]])
+      setChosedSelectIds([])
     }
   }, [messages])
 
@@ -94,7 +96,7 @@ export function Talk() {
             switch (message.type) {
               case 'text':
                 return message.isBot ? (
-                  <div key={message.id} className="flex gap-2">
+                  <div key={uniqueId()} className="flex gap-2">
                     <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
                     <TalkBubble facing="left" className="rounded-tl-lg bg-gray-700">
                       {message.data}
@@ -102,7 +104,7 @@ export function Talk() {
                   </div>
                 ) : (
                   <TalkBubble
-                    key={message.id}
+                    key={uniqueId()}
                     facing="right"
                     className="ml-auto max-w-full rounded-tr-lg bg-orange-400 text-gray-800"
                   >
@@ -113,7 +115,7 @@ export function Talk() {
               case 'select':
                 return (
                   <TalkSelect
-                    key={message.id}
+                    key={uniqueId()}
                     options={message.data}
                     onSelect={(option) => {
                       if (chosedSelectIds.includes(message.id)) return
@@ -134,9 +136,9 @@ export function Talk() {
 
               case 'audio':
                 return (
-                  <div key={message.id} className="flex gap-2">
+                  <div key={uniqueId()} className="flex gap-2">
                     <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
-                    <TalkAudio src={message.data} facing="left" className="rounded-tl-lg bg-gray-600" />
+                    <TalkAudio src={message.data} facing="left" className="rounded-tl-lg bg-gray-700" />
                   </div>
                 )
             }
