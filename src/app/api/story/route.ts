@@ -60,7 +60,7 @@ export async function GET(request: Request) {
       }
 
       return Response.json({
-        status: "pendding",
+        status: "pending",
       });
     })
     .catch((err) => console.error(err));

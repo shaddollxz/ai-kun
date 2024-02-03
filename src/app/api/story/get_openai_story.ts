@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 export async function getOpenaiStory(storyType: string) {
-  const contentStory = `生成一个200字的${storyType}`;
+  const contentStory = `生成一个150字的${storyType}`;
 
   const completion = await openai.chat.completions.create({
     messages: [

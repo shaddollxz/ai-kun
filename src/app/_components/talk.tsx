@@ -83,6 +83,7 @@ export function Talk() {
             const intervalId = setInterval(async () => {
               const res = await fetch(`/api/story?id=${data.id}`)
               const resData = await res.json()
+console.log(resData,"Ddd");
 
               if (resData.status === 'pending') return
 

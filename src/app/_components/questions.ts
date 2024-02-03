@@ -31,8 +31,8 @@ export const questions: [TextMessage, SelectMessage][] = [
           value: '历史故事',
         },
         {
-          label: '语言故事',
-          value: '语言故事',
+          label: '寓言故事',
+          value: '寓言故事',
         },
         {
           label: '儿童故事',
