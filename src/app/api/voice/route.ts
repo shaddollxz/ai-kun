@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       isBot: true,
     }
 
-    // await sleep(1000)
+    await sleep(1000)
 
     return Response.json(select)
   }
