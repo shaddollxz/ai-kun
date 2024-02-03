@@ -13,11 +13,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-cn">
-      <body className="flex flex-col h-screen md:w-[500px] mx-auto">
-        <header className="h-12 w-full p-2 bg-gray-800">
+      <body className="flex flex-col h-screen sm:max-w-sm mx-auto text-gray-300">
+        <header className="h-12 w-full p-2 bg-gray-900">
           <h1 className="text-2xl font-medium">听故事</h1>
         </header>
-        <main className="flex-1 w-full p-2 bg-gray-800 overflow-hidden">{children}</main>
+        <main className="flex-1 w-full p-2 bg-gray-900 overflow-hidden">{children}</main>
       </body>
     </html>
   )

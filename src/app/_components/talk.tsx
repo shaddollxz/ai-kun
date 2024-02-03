@@ -10,6 +10,7 @@ import { uniqueId } from '@/utils/unique-id'
 import { questions } from './questions'
 import { TalkInput } from '@/components/talk-input'
 import type { Message } from '@/types/message'
+import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
   const messageContent = useRef<HTMLDivElement | null>(null)
@@ -34,7 +35,13 @@ export function Talk() {
 
   useEffect(() => {
     const lastNode = messages.at(-1)
-    if (lastNode && !lastNode.isBot && lastNode.data === '我要听故事' && !chosedSelectIds.length) {
+    if (
+      lastNode &&
+      !lastNode.isBot &&
+      typeof lastNode.data === 'string' &&
+      /我要听故事/.test(lastNode.data) &&
+      !chosedSelectIds.length
+    ) {
       setMessage((v) => [...v, ...questions[0]])
     }
   }, [messages])
@@ -60,7 +67,7 @@ export function Talk() {
             <span className="text-orange-400 mr-1">小鸡哥</span>
             <span>智能助理</span>
           </IKunBadge>
-          <p className="text-center text-sm text-gray-500">助理小鸡哥 进入会话为你服务</p>
+          <p className="text-center text-xs text-gray-500">助理小鸡哥 进入会话为你服务</p>
         </div>
 
         <div className="flex flex-col gap-3 w-full">
@@ -69,15 +76,8 @@ export function Talk() {
               case 'text':
                 return message.isBot ? (
                   <div key={message.id} className="flex gap-2">
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      className="dark:invert"
-                      width={100}
-                      height={24}
-                      priority
-                    />
-                    <TalkBubble facing="left" className="rounded-tl-lg bg-gray-600">
+                    <Image src="/logo.svg" alt="坤坤" width={24} height={24} priority />
+                    <TalkBubble facing="left" className="rounded-tl-lg bg-gray-700">
                       {message.data}
                     </TalkBubble>
                   </div>
@@ -85,7 +85,7 @@ export function Talk() {
                   <TalkBubble
                     key={message.id}
                     facing="right"
-                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-700"
+                    className="ml-auto rounded-tr-lg bg-orange-400 text-gray-800"
                   >
                     {message.data}
                   </TalkBubble>
@@ -114,7 +114,20 @@ export function Talk() {
                 )
 
               case 'audio':
-                return 'audio'
+                return (
+                  <div key={message.id} className="flex gap-2">
+                    <Image
+                      src="/vercel.svg"
+                      alt="Vercel Logo"
+                      className="dark:invert"
+                      width={100}
+                      height={24}
+                      priority
+                    />
+
+                    <TalkAudio src={message.data} facing="left" className="w-48 rounded-tl-lg bg-gray-600" />
+                  </div>
+                )
             }
           })}
         </div>

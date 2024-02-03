@@ -8,7 +8,7 @@ export function TalkSelect<T>({
   onSelect: (option: SelectOption<T>) => void
 }) {
   return (
-    <div className="w-full p-2 bg-gray-500 rounded-2xl">
+    <div className="w-full p-2 bg-gray-700 rounded-2xl">
       {options.map((option) => {
         return (
           <div
