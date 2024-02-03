@@ -10,6 +10,7 @@ import { uniqueId } from '@/utils/unique-id'
 import { questions } from './questions'
 import { TalkInput } from '@/components/talk-input'
 import type { Message } from '@/types/message'
+import { TalkAudio } from '@/components/talk-audio'
 
 export function Talk() {
   const messageContent = useRef<HTMLDivElement | null>(null)
@@ -114,7 +115,20 @@ export function Talk() {
                 )
 
               case 'audio':
-                return 'audio'
+                return (
+                  <div key={message.id} className="flex gap-2">
+                    <Image
+                      src="/vercel.svg"
+                      alt="Vercel Logo"
+                      className="dark:invert"
+                      width={100}
+                      height={24}
+                      priority
+                    />
+
+                    <TalkAudio src={message.data} facing="left" className="w-48 rounded-tl-lg bg-gray-600" />
+                  </div>
+                )
             }
           })}
         </div>

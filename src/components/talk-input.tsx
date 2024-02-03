@@ -1,5 +1,6 @@
 import type { ClassValue } from 'clsx'
 import clsx from 'clsx'
+import { SendHorizonal } from 'lucide-react'
 import { useState } from 'react'
 
 export function TalkInput({
@@ -22,7 +23,7 @@ export function TalkInput({
         onChange={(e) => setInputValue(e.target.value)}
       />
       <div
-        className="bg-orange-400 rounded-full cursor-pointer"
+        className="flex items-center justify-center w-8 h-8 bg-orange-400 rounded-full cursor-pointer"
         onClick={() => {
           if (inputValue) {
             onValueChange(inputValue)
@@ -30,7 +31,7 @@ export function TalkInput({
           }
         }}
       >
-        icon
+        <SendHorizonal size={21} />
       </div>
     </div>
   )
