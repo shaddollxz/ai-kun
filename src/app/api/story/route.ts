@@ -56,8 +56,8 @@ export async function GET(request: Request) {
       }
 
       return Response.json({
-        status: 'pending',
-      })
+        status: "pending",
+      });
     })
   } catch (error) {
     throw Response.json({})
